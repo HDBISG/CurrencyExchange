@@ -2,6 +2,8 @@ package com.singtel.currencyexchange.service;
 
 
 import com.singtel.currencyexchange.entity.CurrencyExchangeEntity;
+
+import com.singtel.currencyexchange.service.cache.CurrencyExchangeCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import java.util.List;
 @Service("CurrencyExchangeService")
 
 public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
+
+    @Autowired
+    CurrencyExchangeCache currencyExchangeCache;
 
     public List<CurrencyExchangeEntity> findAllBy1Date(String date ) {
         return null;
