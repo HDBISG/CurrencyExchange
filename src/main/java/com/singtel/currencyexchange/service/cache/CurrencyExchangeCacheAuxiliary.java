@@ -66,7 +66,7 @@ public class CurrencyExchangeCacheAuxiliary {
 
             if( cxListByCurrency == null ) {
                 cxListByCurrency = new ArrayList<>(10);
-                dateCurrencyMap.put( cx.getCurrency(), cxListByCurrency );
+                curencyDateMap.put( cx.getCurrency(), cxListByCurrency );
             }
             cxListByCurrency.add( cx );
         }
@@ -108,6 +108,24 @@ public class CurrencyExchangeCacheAuxiliary {
             }
         }
         return currencyExchangeEntityList;
+    }
+
+    public List<CurrencyExchangeEntity> clone( List<CurrencyExchangeEntity> ceList ) {
+        if( ceList == null ) {
+            return null;
+        }
+
+        List<CurrencyExchangeEntity> ceListClone = new ArrayList<>( ceList.size() );
+
+        try {
+            for( CurrencyExchangeEntity ce: ceList ) {
+                ceListClone.add( (CurrencyExchangeEntity)ce.clone() );
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        return ceListClone;
     }
 
 }

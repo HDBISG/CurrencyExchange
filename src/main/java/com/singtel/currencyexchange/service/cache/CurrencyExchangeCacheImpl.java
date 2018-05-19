@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,63 @@ public class CurrencyExchangeCacheImpl implements CurrencyExchangeCache {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Override
+    public boolean isAvailbale(){
+        if( dateCurrencyMap != null && dateCurrencyMap.size() > 0
+                && curencyDateMap != null && curencyDateMap.size() > 0 ) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<CurrencyExchangeEntity> findAllBy1Date(String date ) {
+        return new CurrencyExchangeCacheAuxiliary().clone( dateCurrencyMap.get( date ) ) ;
+    }
+
+    @Override
+    public CurrencyExchangeEntity findExchangeRateByDate(String date, String currency ) {
+
+        List<CurrencyExchangeEntity> ceList = dateCurrencyMap.get( date );
+
+        if( ceList == null ) {
+            return  null;
+        }
+        for( CurrencyExchangeEntity cx: ceList ) {
+
+            if( currency.equalsIgnoreCase( cx.getCurrency() ) ) {
+
+                CurrencyExchangeEntity ceClone = null;
+                try {
+                    ceClone = (CurrencyExchangeEntity)cx.clone();
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+                return ceClone;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<CurrencyExchangeEntity> findAllByRangeDate( String dateBegin, String dateEnd, String curency ) {
+
+        List<CurrencyExchangeEntity> ceList = curencyDateMap.get( curency );
+
+        int begin = ceList.indexOf( new CurrencyExchangeEntity(dateBegin, curency, null) );
+        int end = ceList.indexOf( new CurrencyExchangeEntity(dateEnd, curency, null) );
+
+        List<CurrencyExchangeEntity> rstList = ceList.subList( begin,end + 1 );
+
+        return new CurrencyExchangeCacheAuxiliary().clone( rstList );
+    }
+
+
+
+
+
+
     @PostConstruct
     public void PostConstruct() {
         log.info( "PostConstruct()");
@@ -45,11 +103,11 @@ public class CurrencyExchangeCacheImpl implements CurrencyExchangeCache {
         new CurrencyExchangeCacheAuxiliary().initCache( getCurrencyExchangeFolder() );
 
         for( List<CurrencyExchangeEntity> cxList: dateCurrencyMap.values()) {
-            Collections.sort( cxList, new CurrencyExchangeEntity.AscDateComparaor() );
+            Collections.sort( cxList, new CurrencyExchangeEntity.AscCurrencyComparaor() );
         }
 
         for( List<CurrencyExchangeEntity> cxList: curencyDateMap.values()) {
-            Collections.sort( cxList, new CurrencyExchangeEntity.AscCurrencyComparaor() );
+            Collections.sort( cxList, new CurrencyExchangeEntity.AscDateComparaor() );
         }
     }
 
