@@ -23,10 +23,10 @@ public class CurrencyExchangeCacheAuxiliary {
     public void initCache( File currencyExchangeFolder ) {
 
         // Map<date, List<CurrencyExchangeEntity> >
-        Map<String, List<CurrencyExchangeEntity> > dateCurrencyMap = new HashMap<>();
+        Map<String, List<CurrencyExchangeEntity> > dateCurrencyMap = new HashMap<String, List<CurrencyExchangeEntity>>();
 
         // Map< Currency, List<CurrencyExchangeEntity> >
-        Map<String, List<CurrencyExchangeEntity> > curencyDateMap = new HashMap<>();
+        Map<String, List<CurrencyExchangeEntity> > curencyDateMap = new HashMap<String, List<CurrencyExchangeEntity>>();
 
         for( File yearFile : currencyExchangeFolder.listFiles() ) {
 
@@ -55,7 +55,7 @@ public class CurrencyExchangeCacheAuxiliary {
             List<CurrencyExchangeEntity> cxList = dateCurrencyMap.get( cx.getDate() );
 
             if( cxList == null ) {
-                cxList = new ArrayList<>(10);
+                cxList = new ArrayList<CurrencyExchangeEntity>(10);
                 dateCurrencyMap.put( cx.getDate(), cxList );
             }
             cxList.add( cx );
@@ -65,7 +65,7 @@ public class CurrencyExchangeCacheAuxiliary {
             List<CurrencyExchangeEntity> cxListByCurrency = curencyDateMap.get( cx.getCurrency() );
 
             if( cxListByCurrency == null ) {
-                cxListByCurrency = new ArrayList<>(10);
+                cxListByCurrency = new ArrayList<CurrencyExchangeEntity>(10);
                 curencyDateMap.put( cx.getCurrency(), cxListByCurrency );
             }
             cxListByCurrency.add( cx );
@@ -74,7 +74,7 @@ public class CurrencyExchangeCacheAuxiliary {
 
     private List<CurrencyExchangeEntity> parseFile( File file ) {
 
-        List<CurrencyExchangeEntity> currencyExchangeEntityList = new ArrayList<>(20);
+        List<CurrencyExchangeEntity> currencyExchangeEntityList = new ArrayList<CurrencyExchangeEntity>(20);
 
         LineNumberReader lineNumberReader = null;
 
@@ -115,7 +115,7 @@ public class CurrencyExchangeCacheAuxiliary {
             return null;
         }
 
-        List<CurrencyExchangeEntity> ceListClone = new ArrayList<>( ceList.size() );
+        List<CurrencyExchangeEntity> ceListClone = new ArrayList<CurrencyExchangeEntity>( ceList.size() );
 
         try {
             for( CurrencyExchangeEntity ce: ceList ) {

@@ -153,5 +153,10 @@ public class CurrencyExchangeController {
         }
     }
 
+    @RequestMapping("/index")
+    public String welcome() {
+        log.info("index");
+        return "index";
+    }
 
 }
